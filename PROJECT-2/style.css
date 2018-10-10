@@ -1,0 +1,256 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+header {
+    position: relative;
+    /* border: black solid; */
+}
+
+header .jumbotron {
+    margin: 0;
+    border-block-end: black solid;
+
+}
+
+header img {
+    position: relative;
+    top: -65px;
+    float: right;
+}
+
+#stickTop{
+    background-color: white;
+    padding-bottom: 30px;
+}
+
+main{
+    padding-top: 35px;
+    margin-top: 18em;
+
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+nav {
+    margin-top: 10px;
+}
+
+.form-control {
+    width: 60%;
+    margin-right: 0.5rem;
+}
+
+#home{
+    padding-top: 4em;
+    padding-bottom: 3em;
+
+}
+#liveReports , #about{
+    padding: 5em 0 4em 0;
+}
+
+
+
+/*-----------------------------------------*/
+/* The switch - the box around the slider */
+.switch {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    display: none;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/*-----------------------------------------*/
+
+
+/*-----------------------------------------*/
+.modal-content>p {
+    margin: 0.5rem;
+}
+
+.sortCoins {
+    position: relative;
+}
+
+.sortCoins>h5 {
+    top: 7px;
+    position: relative;
+    float: left;
+}
+
+.modalswitch {
+    position: relative;
+    float: right;
+    right: 10px;
+    top: 10px;
+    display: block;
+    width: 60px;
+    height: 34px;
+
+}
+
+/*-----------------------------------------*/
+
+/*-----------------------------------------*/
+.pad {
+    padding: 15px 15px 15px 0px;
+}
+
+progress {
+    width: 11rem;
+}
+
+
+progress[value]::-webkit-progress-value {
+    background-image:
+        -webkit-linear-gradient(-45deg,
+        transparent 33%, rgba(0, 0, 0, .1) 33%,
+        rgba(0, 0, 0, .1) 66%, transparent 66%),
+        -webkit-linear-gradient(top,
+        rgba(255, 255, 255, .25),
+        rgba(0, 0, 0, .25)),
+        -webkit-linear-gradient(left, #09c, #f44);
+
+    border-radius: 2px;
+    background-size: 35px 20px, 100% 100%, 100% 100%;
+}
+
+/*-----------------------------------------*/
+
+
+/*-----------------------------------------*/
+.disp {
+    display: block;
+}
+
+.nodisp {
+    display: none;
+}
+
+/*-----------------------------------------*/
+
+
+/*-----------------------------------------*/
+#chartContainer{
+
+    border: black solid;
+    border-radius: 10px;
+}
+#chartContainer .noChart{
+    background: lightgrey;
+}
+#chartContainer .noChart> h1,#chartContainer .noChart> h2{
+text-align: center;
+margin: 15px auto 15px auto ;
+}
+
+/*-----------------------------------------*/
+
+/*-----------------------------------------*/
+/* parallax w3schools */
+.parallax {
+    /* The image used */
+    background-image: url("img/parallaxBackground.jpg");
+
+    /* Set a specific height */
+    min-height: 500px; 
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/*-----------------------------------------*/
+
+
+/* media queries */
+@media only screen and (max-width: 415px) {
+    header img {
+        display: none;
+    }
+    main{
+        padding-top: 35px;
+        margin-top: 14em;
+    
+    }
+
+    #home{
+        padding-top: 6em;
+        padding-bottom: 3em;
+    
+    }
+    #liveReports , #about{
+        padding: 4em 0 4em 0;
+    }
+    
+}
