@@ -51,8 +51,8 @@ function widowScroll(e) {
                     $("#liveReports").html("");
                     liveReportsLoad();
                 }  
-                // $("a[name='liveReports']").removeClass("active");
-                // $("a[name='home']").addClass("active");
+                $("a[name='home']").removeClass("active");
+                $("a[name='liveReports']").addClass("active");
 
             }
 
