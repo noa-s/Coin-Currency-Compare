@@ -28,14 +28,14 @@ $(document).ready(function () {
 function scrollToDiv(divName) {
     animatedScroll = true;
     $('html, body').animate({
-        scrollTop: $(`#${divName}`).offset().top - 200
+        scrollTop: $(`#${divName}`).offset().top - 220
         
     }, 1000, function(){animatedScroll=false});
 
 }
 
 
-function widowScroll(e) {
+function widowScroll() {
 
 
     if (animatedScroll == false) {
@@ -71,6 +71,9 @@ function widowScroll(e) {
                 }    
                 $("a[name='liveReports']").removeClass("active");
                 $("a[name='home']").addClass("active");
+                $(".form-inline").show();
+
+                
                 
             }
         } else
