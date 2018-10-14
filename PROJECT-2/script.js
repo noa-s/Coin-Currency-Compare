@@ -1,3 +1,5 @@
+var animatedScroll = false;
+
 $(document).ready(function () {
     console.log("ready!");
 
@@ -7,12 +9,14 @@ $(document).ready(function () {
     $("a[name='home']").click(homeBtn);
     $("a[name='about']").click(aboutBtn);
     $("#home").load("homeHtml.txt").promise().done(getAllCoins());
-    $("#searchBar >button").click(searchBtn);
-    $("#searchBar").submit(function(e){
+    $("#searchBar button.btn-success").click(searchBtn);
+    $("#searchBar button.btn-secondary").click(clearSearchBtn);
+    $("#searchBar").submit(function (e) {
         e.preventDefault();
     });
-    
-    // $(window).scroll(widowScroll);
+    $(window).scrollTop(0);
+    $(window).scroll(widowScroll);
+    // $(window).on('wheel',widowScroll);
 
     // $("#home").promise().done(()=>{getAllCoins()});
 
@@ -20,64 +24,125 @@ $(document).ready(function () {
 
 });
 
-function widowScroll(){
-    let windowHeight= $(this).height();
-    let homeHeight= $("#home").height();
-    let reportsHeight= $("#liveReports").height();
-    let aboutHeight= $("#about").height();
-
-    console.log("windowHeight:",windowHeight);
-    console.log("homeHeight:",homeHeight);
-    console.log("reportsHeight:",reportsHeight);
-    if($("#liveReports> #chartContainer").length>0){
-    console.log("#chartContainer EXIST");
-    }else{
-        console.log("#chartContainer DON'T EXIST");
-
-    }
-    console.log("aboutHeight:",aboutHeight);
-    debugger;
-}
 
 function scrollToDiv(divName) {
+    animatedScroll = true;
     $('html, body').animate({
-        scrollTop: $(`#${divName}`).offset().top-200
-    }, 2000);
+        scrollTop: $(`#${divName}`).offset().top - 200
+        
+    }, 1000, function(){animatedScroll=false});
 
 }
 
-function aboutBtn(){
-    // var windowHeight= $(this).height();
-    // let totslHeight= $("#home").height()+$("#liveReports").height();
-    // $('html, body').animate({
-    //     scrollTop: totslHeight-500
-    // }, 2000);
-    // $("#about").load("aboutHtml.txt");
 
-    // window.scrollTo(0,totslHeight-500);
-    // debugger
+function widowScroll(e) {
 
-    if (!(this.classList.contains("active"))) {
-        $("#about").load("aboutHtml.txt");
-        $(".form-inline").hide();
-        $("a[name='about']").addClass("active");
-        $("a[name='liveReports']").removeClass("active");
-        $("a[name='home']").removeClass("active");
-;
-        // deleteOtherDivs(this.name);
-        // $('html, body').animate({
-        //     scrollTop: $(`#about`).offset().top-200
-        // }, 1000);
-        scrollToDiv(this.name);
 
+    if (animatedScroll == false) {
+        let windowHeight = $(this).height();
+        let mainHeight = $("main").height();
+        let homeHeight = $("#home").height();
+        let reportsHeight = $("#liveReports").height();
+        let aboutHeight = $("#about").height();
+
+        if ($("a[name='home']")[0].classList.contains("active")) {
+            if (window.scrollY > homeHeight) {
+                if($("#liveReports").data("status")=="notRunning"){
+                    $("#liveReports").html("");
+                    liveReportsLoad();
+                }  
+                $("a[name='home']").removeClass("active");
+                $("a[name='liveReports']").addClass("active");
+
+            }
+
+        } else
+        
+        if ($("a[name='liveReports']")[0].classList.contains("active")) {
+            if (window.scrollY > homeHeight + reportsHeight) {
+                aboutLoad();
+            }
+            if (window.scrollY < homeHeight) {
+                $("a[name='liveReports']").removeClass("active");
+                $("a[name='home']").addClass("active");
+                if($("#liveReports").data("status")=="notRunning"){
+                    // $("#liveReports").load("reportsHtml.txt");
+                    $("#liveReports").html("");
+                }    
+                $("a[name='liveReports']").removeClass("active");
+                $("a[name='home']").addClass("active");
+                
+            }
+        } else
+
+        if ($("a[name='about']")[0].classList.contains("active")) {
+
+            if (window.scrollY < homeHeight + reportsHeight) {
+                $("a[name='about']").removeClass("active");
+                $("a[name='liveReports']").addClass("active");
+                $("#about").html("");
+
+            }
+        }
+
+    }
+
+
+    // debugger;
+
+
+    // $("main").height()-$("#about").height()-$("#liveReports").height()
+
+
+    //     if (window.scrollY > homeHeight + reportsHeight && reportsHeight != 0 && aboutHeight==0) {
+    //         aboutLoad();
+    //     } 
+    //     if(window.scrollY < homeHeight + reportsHeight  && reportsHeight != 0 && aboutHeight!=0){
+
+    //         $("a[name='about']").removeClass("active");
+    //         $("a[name='liveReports']").addClass("active");
+    //         $("#about").html("");
+    //     }
+    //     if(window.scrollY < homeHeight && reportsHeight != 0 && aboutHeight==0){
+    //         $("a[name='liveReports']").removeClass("active");
+    //         $("a[name='home']").addClass("active");
+    //         // clearInterval(dataInterval);
+    //         // $("#liveReports").hide();
+    //     }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+function aboutBtn() {
+
+    scrollToDiv("about");
+    if (!($("a[name='about']")[0].classList.contains("active"))) {
+        aboutLoad();
     }
 }
 
+function aboutLoad() {
+    $("#about").load("aboutHtml.txt");
+    $(".form-inline").hide();
+    $("a[name='about']").addClass("active");
+    $("a[name='liveReports']").removeClass("active");
+    $("a[name='home']").removeClass("active");
+}
 
 
 
 
 function homeBtn() {
+    scrollToDiv(this.name);
     if (!(this.classList.contains("active"))) {
         // $("#home").load("homeHtml.txt");
         $("#home").load("homeHtml.txt").promise().done(getAllCoins());
@@ -88,13 +153,13 @@ function homeBtn() {
         $("a[name='about']").removeClass("active");
         // deleteOtherDivs(this.name);
     }
-    scrollToDiv(this.name);
+
 }
 
 function getAllCoins() {
     $.getJSON("https://api.coingecko.com/api/v3/coins/list", function (data) {
             console.log("success");
-            printCoinDivs(data);  
+            printCoinDivs(data);
 
 
         })
@@ -104,7 +169,7 @@ function getAllCoins() {
         .always(function () {
             let existingCoinsArr = JSON.parse(localStorage.getItem("selectedCoins"));
 
-            if(existingCoinsArr.length>0){
+            if (existingCoinsArr.length > 0) {
 
                 existingCoinsArr.forEach(checked => {
                     $(`.card input[name='${checked}']`).prop("checked", true);
@@ -118,11 +183,50 @@ function getAllCoins() {
 }
 
 
+function searchBtn() {
+    var inpVal = $("#searchBar input").val().toLowerCase();
+    var allCoinDivs = $(".coinContainer");
+    if (inpVal == "") {
+        console.log(allCoinDivs);
+        for (var i = 0; i < allCoinDivs.length; i++) {
+            if (allCoinDivs[i].classList.contains("nodisp")) {
+                allCoinDivs[i].classList.replace("nodisp", "disp");
+            }
+        }
+        $("#searchBar button.btn-secondary")[0].classList.replace("disp", "nodisp");
 
-function searchBtn(){
-console.log("searchBtn clicked");
-console.log($("#searchBar >input").val());
-debugger;
+    } else {
+        $("#searchBar button.btn-secondary")[0].classList.replace("nodisp", "disp");
+
+        for (var i = 0; i < allCoinDivs.length; i++) {
+
+            if (allCoinDivs[i].dataset.coinsymbol == inpVal || allCoinDivs[i].dataset.coinid == inpVal) {
+                // debugger;
+                if (allCoinDivs[i].classList.contains("nodisp")) {
+                    allCoinDivs[i].classList.replace("nodisp", "disp");
+                }
+                // else{
+                //     allCoinDivs[i].classList.replace("disp","nodisp");
+                // }
+            } else {
+                allCoinDivs[i].classList.replace("disp", "nodisp");
+            }
+        }
+    }
+
+}
+
+
+
+function clearSearchBtn() {
+
+    var allCoinDivs = $(".coinContainer");
+    for (var i = 0; i < allCoinDivs.length; i++) {
+        if (allCoinDivs[i].classList.contains("nodisp")) {
+            allCoinDivs[i].classList.replace("nodisp", "disp");
+        }
+    }
+    $("#searchBar button.btn-secondary")[0].classList.replace("disp", "nodisp");
 
 }
 
@@ -130,8 +234,8 @@ function printCoinDivs(coin) {
     console.log("printing 50 coins");
     for (var i = 0; i < 50; i++) {
         newDiv = `
-        <div class="col-sm-4 px-0">
-                <div class="card" data-coinid="${coin[i].id}">
+        <div class="col-sm-4 px-0 coinContainer disp" data-coinid="${coin[i].id}" data-coinsymbol="${coin[i].symbol}">
+                <div class="card">
 
                     <label class="switch">
                         <input type="checkbox" name="${coin[i].symbol}">
@@ -172,6 +276,8 @@ function printCoinDivs(coin) {
 
 
 function checkBoxVal() {
+    $("#liveReports").data("status","notRunning");
+
     var sixCoin = "";
     // console.log("this checkBoxVal changed", this);
     var selectedCoinsArr = JSON.parse(localStorage.getItem("selectedCoins"));
@@ -255,19 +361,15 @@ function overFiveModal(selectedCoinsArr, sixCoin) {
 
 
 
-function deleteOtherDivs(divName){
-    var mainChildernArr=$("main").children();
-    mainChildernArr.map(x=>
-    {
-        if(mainChildernArr[x].id!=divName){
-            $(`#${mainChildernArr[x].id}`).html("");
-        }
-    });
-}
-
-
-
-
+// function deleteOtherDivs(divName){
+//     var mainChildernArr=$("main").children();
+//     mainChildernArr.map(x=>
+//     {
+//         if(mainChildernArr[x].id!=divName){
+//             $(`#${mainChildernArr[x].id}`).html("");
+//         }
+//     });
+// }
 
 
 
@@ -275,31 +377,42 @@ function deleteOtherDivs(divName){
 
 
 function liveReportsBtn() {
-    // $('html, body').animate({
-    //     scrollTop: $(`#liveReports`).offset().top
-    // }, 2000);x   
-    if (!(this.classList.contains("active"))) {
 
-        $("#liveReports").load("reportsHtml.txt");
-        $(".form-inline").hide();
-        $("a[name='liveReports']").addClass("active");
-        $("a[name='home']").removeClass("active");
-        $("a[name='about']").removeClass("active");
-      
+    scrollToDiv("liveReports");
+    if (!($("a[name='liveReports']")[0].classList.contains("active"))) {
         // debugger;
-
-        // deleteOtherDivs(this.name);
-        
-        if(JSON.parse(localStorage.getItem("selectedCoins")).length>0){
-            generatReport();
-
-        }
+        liveReportsLoad();
     }
-    scrollToDiv(this.name);
-
 }
 
-function generatReport(){
+
+function liveReportsLoad() {
+    console.log($("#liveReports").data("status"));
+    if($("#liveReports").data("status")=="notRunning"){
+        $("#liveReports").load("reportsHtml.txt");
+    }    
+
+
+    $(".form-inline").hide();
+    $("a[name='liveReports']").addClass("active");
+    $("a[name='home']").removeClass("active");
+    $("a[name='about']").removeClass("active");
+
+    // debugger;
+
+    // deleteOtherDivs(this.name);
+
+    if (JSON.parse(localStorage.getItem("selectedCoins")).length > 0) {
+        generatReport();
+
+    }
+}
+
+function generatReport() {
+
+    $("#liveReports").data("status","running");
+
+
     var selectedCoinsArr = JSON.parse(localStorage.getItem("selectedCoins"));
     if (selectedCoinsArr.length > 0) {
         $("#chartContainer").html("");
@@ -374,7 +487,7 @@ function drawChart(chartData, str) {
     var chart = $("#chartContainer").CanvasJSChart(options);
 
     function toggleDataSeries(e) {
-            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
             e.dataSeries.visible = false;
         } else {
             e.dataSeries.visible = true;
@@ -406,7 +519,7 @@ function drawChart(chartData, str) {
     }
     // generates first set of dataPoints 
     updateChart();
-    var dataInterval =setInterval(function () {
+    var dataInterval = setInterval(function () {
         $.getJSON(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${str}&tsyms=USD`, function (dataAPI) {
 
             for (var i = 0; i < data.length; i++) {
@@ -417,10 +530,13 @@ function drawChart(chartData, str) {
         }).always(function () {
             updateChart(data);
         });
-        if(JSON.parse(localStorage.getItem("selectedCoins")).length==0){
+        if (JSON.parse(localStorage.getItem("selectedCoins")).length == 0) {
             clearInterval(dataInterval);
-
         }
+        // else if (!($("a[name='liveReports']")[0].classList.contains("active"))) {
+        //     clearInterval(dataInterval);
+
+        // }
     }, updateInterval);
 
 }
@@ -479,7 +595,7 @@ function getCoinInfo(coinBtn) {
             } else {
                 console.log("getInfoFromLocalStorage()", cuurentCoinInfoArr[indexInArray]);
                 drawInfoDiv(requiredInfoId);
-                        }
+            }
         } else {
             getInfoFronAPI(requiredInfoId, coinBtn);
         }
@@ -564,7 +680,7 @@ function getInfoFronAPI(requiredInfoId, coinBtn) {
 
 
 function showProgressBar(coin, callbackGetCoinInfo) {
-    
+
     var coinID = coin.dataset.id;
     var progressBar = $(`.progress[name="${coinID}PB"]`);
     progressBar.css('display', 'block');
@@ -572,7 +688,7 @@ function showProgressBar(coin, callbackGetCoinInfo) {
     var progress = 0; // initial value of your progress bar
     var timeout = 5; // number of milliseconds between each frame
     var increment = .5; // increment for each frame
-    var maxprogress = 110; // when to leave stop running the animation
+    var maxprogress = 105; // when to leave stop running the animation
 
     function animate() {
         setTimeout(function () {

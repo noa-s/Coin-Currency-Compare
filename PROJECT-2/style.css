@@ -61,6 +61,10 @@ nav {
 #liveReports , #about{
     padding: 5em 0 4em 0;
 }
+#about{
+    /* background-image: linear-gradient(to right, transparent,#b3ccff,transparent);;  */
+    padding: 5em;
+}
 
 
 
@@ -252,5 +256,5 @@ margin: 15px auto 15px auto ;
     #liveReports , #about{
         padding: 4em 0 4em 0;
     }
-    
+
 }
